@@ -428,13 +428,13 @@ extra = "earlyprintk=xenboot console=hvc0 root=/dev/xvda debug rw init=/sbin/ini
 
 As the [LibVMI](http://LibVMI.com/ "LibVMI") library by now implements sufficient support that is required for stealthy monitoring on ARM, the code can be cloned directly from the associated [Github repository](https://github.com/LibVMI/LibVMI "LibVMI Github").
 
-To get the most recent sources for [DRAKVUF](www.drakvuf.com "DRAKVUF Homepage"), we would like to refer to the pending [pull request](https://github.com/tklengyel/drakvuf/pull/445 "ARM support for DRAKVUF").
+To get the most recent sources for [DRAKVUF](https://drakvuf.com/ "DRAKVUF Homepage"), we would like to refer to the pending [pull request](https://github.com/tklengyel/drakvuf/pull/445 "ARM support for DRAKVUF").
 
 Both required configuration steps for LibVMI and DRAKVUF and a brief howto describing the usage of basic DRAKVUF capabilities on ARM can be found on the following [blog post](http://arm-drakvuf.blogspot.com/ "Support for DRAKVUF on ARM").
 
-## **Generating the Linux kernel dwarf object**
+## **Generating the Linux Kernel DWARF Object**
 
-  When starting DRAKVUF to monitor a guest, the framework needs a profile of the guest's underlying kernel in order to extract information such as addresses of various objects. The profile can be created using Google's [rekall](https://github.com/google/rekall) tool in conjunction with a tool built by the authors to complement the lacking features of rekall for Linux kernel for ARM's Aarch64. In order to build the dwarf object, first clone the rekall tool from the official repository and modify the content of `<path_to_rekall>/tools/linux/Makefile` to the following content:
+  When starting DRAKVUF to monitor a guest, the framework needs a profile of the guest's underlying kernel in order to extract information such as addresses of various objects. The profile can be created using Google's [rekall](https://github.com/google/rekall) tool in conjunction with a tool built by the authors to complement the lacking features of rekall for Linux kernel for ARM's Aarch64. In order to build the DWARF object, first clone the rekall tool from the official repository and modify the content of `<path_to_rekall>/tools/linux/Makefile` to the following content:
 
     ```
     obj-m += module.o                                                                   
@@ -474,13 +474,13 @@ Both required configuration steps for LibVMI and DRAKVUF and a brief howto descr
             rm -f module_dwarf.ko
     ```
 
-    Execute `make dwarf` to compile the dwarf .object
+    Execute `make dwarf` to compile the DWARF object.
 
-## **Generating the Linux kernel profile**
+## **Generating the Linux Kernel Profile**
 
-  After the dwarf object is generated, the repository containing the scripts to the [rekall-profile-generator](https://github.com/drakvuf-on-arm/rekall-profile-generator) must be cloned. In the repository's local directory execute the following commands to create the kernel's profile:
+  After the DomU object is generated, the repository containing the scripts to the [rekall-profile-generator](https://github.com/drakvuf-on-arm/rekall-profile-generator) must be cloned. In the repository's local directory execute the following commands to create the kernel's profile:
 
-  `./rekall-profile-generator.py -s <path_to_linux_kernel>/System.map -c <path_to_linux_kernel>/.config -d <path_to_rekall>/tools/linux/module_dwarf.ko`
+  `./rekall-profile-generator.py -s <path_to_linux_kernel>/System.map -c <path_to_linux_kernel>/.config -d <path_to_rekall>/tools/linux/module_DomU.ko`
 
   You need to copy the generated `profile` in the SD-Card that will be used by the ARM board.
 
@@ -497,7 +497,7 @@ Both required configuration steps for LibVMI and DRAKVUF and a brief howto descr
 
   After successfully compiling and installing LibVMI, one needs to create a LibVMI profile for the kernel that is analyzed. Therefore, a couple of kernel parameters are needed by LibVMI which can be extracted by inserting in the guest kernel a driver provided by the LibVMI developers. In the the LibVMI local repository follow the steps in the `tools/linux-offset-finder/README` file to learn how to compile and insert the module.
 
-## **Configuring Drakvuf and attaching to a DomU guest**
+## **Configuring DRAKVUF and Attaching to a DomU Guest**
   This section presents the compilation steps and the execution arguments that the user can choose to run [DRAKVUF](https://github.com/drakvuf-on-arm/drakvuf) and attach it to an already executing DomU guest. Also, one needs to install the dependencies that DRAKVUF requires which are listed in the `README` of the repository.
   ```bash
   cd <path_to_drakvuf>
@@ -506,12 +506,7 @@ Both required configuration steps for LibVMI and DRAKVUF and a brief howto descr
   make -j
   src/drakvuf -r <path_to_rekall_profile>/profile -d <name_of_DomU> -a <option> # this command start drakvuf; OPTIONAL: add `-v` to enable debugging output;
   ```
-  The following values for the `<option>` argument are relevant for our scenarios:
-  1. 6 # enables the analysis using Hardware Single-Stepping
-  1. 7 # enables the analysis using Double SMCs Single-Stepping
-  1. 8 # enables the analysis using Split TLBs Single-Stepping using an execute view and a step view
-  1. 9 # enables the analysis using Split TLBs Single-Stepping using an execute view and a backup page in the execute view; NOTE: when using this option, before starting DRAKVUF, you need to insert first a kernel module in the guest that allocates a page in the guest kernel;
 
-## **About the authors**
+## **About the Authors**
 
   [Sergej Proskurin](mailto:proskurin@sec.in.tum.de) and [Marius Momeu](mailto:momeu@sec.in.tum.de) are researchers at the [Chair of IT Security](https://www.sec.in.tum.de/i20/) at the [Technical University of Munich](https://www.tum.de/). Their work covers many low-level security aspects with a focus on Malware Analysis using Virtual Machine Introspection (VMI). More information about previous publications and projects as well as current undergoing projects can be found on the authors' academic [web page](https://www.sec.in.tum.de/i20/people/sergej-proskurin).
