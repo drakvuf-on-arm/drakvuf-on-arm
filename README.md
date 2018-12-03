@@ -10,6 +10,7 @@ From the bird's eye perspective, in the following, we will show how to:
   * Compile and install LibVMI and DRAKVUF on ARM
   * Use DRAKVUF on ARM
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=mfhZBBdC-Jg" target="_blank"><img src="https://img.youtube.com/vi/mfhZBBdC-Jg/0.jpg" alt="Demo DRAKVUF on ARM" width=560 height=340   /></a>
 
 ## **Preparing the SD-card**
 
